@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirman Romansyah | Web Developer & UI/UX Designer Portfolio</title>
+    <!-- Font Inter & Orbitron -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        space: {
+                            bg: '#05060f',
+                            card: 'rgba(15, 23, 42, 0.75)',
+                            border: 'rgba(0, 240, 255, 0.2)',
+                            cyan: '#00f0ff',
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            darkBlue: '#0b0d19'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+                        'spin-slow': 'spin 20s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-20px) rotate(3deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.4))' },
+                            '50%': { opacity: '0.8', filter: 'drop-shadow(0 0 25px rgba(168, 85, 247, 0.7))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles & Utilities */
+        body {
+            background-color: #05060f;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Starfield Canvas Background */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Custom Glassmorphism */
+        .glass-panel {
+            background: rgba(11, 13, 25, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(20, 14, 38, 0.6) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 240, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 240, 255, 0.5);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.3),
+                        0 0 20px 0px rgba(168, 85, 247, 0.2);
+        }
+
+        /* Neon Glow Text */
+        .text-glow-cyan {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6), 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+        
+        .text-glow-purple {
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05060f;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00f0ff;
+        }
+
+        /* Timeline Line Gradient */
+        .timeline-line {
+            background: linear-gradient(to bottom, #00f0ff, #a855f7, #ec4899);
+        }
+    </style>
+</head>
+<body class="relative font-sans antialiased selection:bg-space-cyan selection:text-space-darkBlue">
+
+    <!-- Canvas Bintang Interaktif -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 py-4 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-2xl">
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-space-cyan to-space-purple flex items-center justify-center text-space-darkBlue font-orbitron font-extrabold text-xl group-hover:scale-110 transition-transform">
+                    NR
+                </div>
+                <span class="font-orbitron font-bold text-lg text-white tracking-wider group-hover:text-space-cyan transition-colors">
+                    NIRMAN<span class="text-space-cyan">.DEV</span>
+                </span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
+                <a href="#about" class="hover:text-space-cyan transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-space-cyan hover:after:w-full after:transition-all">Tentang Saya</a>
+                <a href="#skills" class="hover:text-space-cyan transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-space-cyan hover:after:w-full after:transition-all">Keahlian</a>
+                <a href="#experience" class="hover:text-space-cyan transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-space-cyan hover:after:w-full after:transition-all">Pengalaman</a>
+                <a href="#projects" class="hover:text-space-cyan transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-space-cyan hover:after:w-full after:transition-all">Proyek</a>
+                <a href="#contact" class="hover:text-space-cyan transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-space-cyan hover:after:w-full after:transition-all">Kontak</a>
+            </nav>
+
+            <!-- CTA Button -->
+            <a href="#contact" class="hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-full text-xs font-orbitron font-semibold uppercase tracking-wider bg-transparent border border-space-cyan text-space-cyan hover:bg-space-cyan hover:text-space-darkBlue transition-all shadow-[0_0_15px_rgba(0,240,255,0.3)]">
+                <i class="fa-solid fa-paper-plane"></i> Hubungi
+            </a>
+
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-btn" class="md:hidden text-2xl text-white hover:text-space-cyan focus:outline-none" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden max-w-7xl mx-auto mt-2 glass-panel rounded-2xl p-6 flex-col gap-4 text-center font-medium">
+            <a href="#about" class="py-2 hover:text-space-cyan border-b border-gray-800">Tentang Saya</a>
+            <a href="#skills" class="py-2 hover:text-space-cyan border-b border-gray-800">Keahlian</a>
+            <a href="#experience" class="py-2 hover:text-space-cyan border-b border-gray-800">Pengalaman</a>
+            <a href="#projects" class="py-2 hover:text-space-cyan border-b border-gray-800">Proyek</a>
+            <a href="#contact" class="py-2 hover:text-space-cyan">Kontak</a>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="relative z-10 pt-20">
+
+        <!-- 1. Hero Section -->
+        <section id="hero" class="min-h-screen flex items-center justify-center px-4 sm:px-8 py-16 relative overflow-hidden">
+            <!-- Background Glow Orbs -->
+            <div class="absolute top-1/4 left-10 w-72 h-72 bg-space-cyan/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute bottom-1/4 right-10 w-96 h-96 bg-space-purple/20 rounded-full blur-[140px] pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Column: Hero Text -->
+                <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-space-cyan text-xs sm:text-sm font-orbitron tracking-widest uppercase border border-space-cyan/30 animate-pulse">
+                        <span class="w-2 h-2 rounded-full bg-space-cyan animate-ping"></span>
+                        Ready for Exploration & Mission
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl font-orbitron font-extrabold text-white leading-tight">
+                        Halo, Saya <br>
+                        <span class="bg-gradient-to-r from-space-cyan via-blue-400 to-space-purple bg-clip-text text-transparent text-glow-cyan">
+                            Nirman Romansyah
+                        </span>
+                    </h1>
+
+                    <!-- Dynamic Typing Text -->
+                    <div class="text-xl sm:text-2xl font-orbitron text-gray-300 font-medium h-8 flex items-center justify-center lg:justify-start gap-2">
+                        <span>Saya seorang</span>
+                        <span id="typed-text" class="text-space-cyan font-bold border-r-2 border-space-cyan pr-1"></span>
+                    </div>
+
+                    <p class="text-gray-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+                        Lulusan S1 Teknologi Informasi (IPK 3,56) berdedikasi tinggi dalam merancang dan mengembangkan aplikasi web interaktif, perancangan sistem modern, serta arsitektur cloud computing yang responsif, efisien, dan terskala.
+                    </p>
+
+                    <!-- CTA Actions -->
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                        <a href="#projects" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-space-cyan to-blue-600 text-space-darkBlue font-orbitron font-bold text-sm tracking-wider uppercase hover:shadow-[0_0_25px_rgba(0,240,255,0.6)] transition-all hover:scale-105">
+                            <i class="fa-solid fa-rocket mr-2"></i> Jelajahi Proyek
+                        </a>
+                        <a href="#contact" class="px-8 py-3.5 rounded-full glass-panel border border-space-purple text-white font-orbitron font-semibold text-sm tracking-wider hover:bg-space-purple/20 hover:border-space-purple hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all">
+                            <i class="fa-solid fa-envelope mr-2"></i> Kontak Saya
+                        </a>
+                    </div>
+
+                    <!-- Quick Info Badges -->
+                    <div class="pt-8 border-t border-gray-800/80 flex flex-wrap justify-center lg:justify-start gap-6 text-xs font-orbitron text-gray-400">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-location-dot text-space-cyan"></i> Tangerang, Indonesia
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-graduation-cap text-space-purple"></i> S1 Teknologi Informasi
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-star text-yellow-400"></i> IPK 3.56 / 4.00
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Astronaut Floating Graphic -->
+                <div class="lg:col-span-5 flex justify-center relative">
+                    <div class="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
+                        <!-- Orbit Rings -->
+                        <div class="absolute inset-0 border-2 border-dashed border-space-cyan/20 rounded-full animate-spin-slow"></div>
+                        <div class="absolute inset-4 border border-space-purple/30 rounded-full animate-pulse"></div>
+                        
+                        <!-- Floating Astronaut SVG Card -->
+                        <div class="relative z-10 w-full h-full glass-panel rounded-3xl p-6 flex flex-col items-center justify-center shadow-2xl border border-space-cyan/30 animate-float text-center">
+                            <!-- SVG Astronaut Illustration -->
+                            <svg class="w-44 h-44 sm:w-56 sm:h-56 drop-shadow-[0_0_15px_rgba(0,240,255,0.4)]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 21.99 17.52 21.99 12C21.99 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="url(#space-grad-1)" opacity="0.3"/>
+                                <path d="M12 6C8.69 6 6 8.69 6 12C6 13.66 6.67 15.16 7.76 16.24L9.17 14.83C8.44 14.1 8 13.1 8 12C8 9.79 9.79 8 12 8C14.21 8 16 9.79 16 12C16 13.1 15.56 14.1 14.83 14.83L16.24 16.24C17.33 15.16 18 13.66 18 12C18 8.69 15.31 6 12 6Z" fill="#00f0ff"/>
+                                <circle cx="12" cy="12" r="3" fill="#a855f7"/>
+                                <path d="M12 1A11 11 0 1 0 23 12A11 11 0 0 0 12 1Zm0 20a9 9 0 1 1 9-9 9 9 0 0 1-9 9Z" fill="#00f0ff" opacity="0.2"/>
+                                <path d="M9 10C9 8.34 10.34 7 12 7C13.66 7 15 8.34 15 10V11C15 12.66 13.66 14 12 14C10.34 14 9 12.66 9 11V10Z" fill="url(#visor-grad)"/>
+                                <defs>
+                                    <linearGradient id="space-grad-1" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#00f0ff"/>
+                                        <stop offset="1" stop-color="#a855f7"/>
+                                    </linearGradient>
+                                    <linearGradient id="visor-grad" x1="9" y1="7" x2="15" y2="14" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#00f0ff"/>
+                                        <stop offset="1" stop-color="#1e1b4b"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+
+                            <div class="mt-4 font-orbitron">
+                                <p class="text-xs text-space-cyan tracking-widest uppercase">Space Mission Status</p>
+                                <p class="text-sm font-bold text-white mt-1">Ready for Next Deployment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 2. About Me Section -->
+        <section id="about" class="py-20 px-4 sm:px-8 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center space-y-2 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-orbitron font-extrabold text-white tracking-wide">
+                        <span class="text-space-cyan">&lt;</span> TENTANG SAYA <span class="text-space-cyan">/&gt;</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                        Mengenal lebih dekat latar belakang akademis, passion, dan dedikasi saya di bidang IT.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-space-cyan to-space-purple mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                    <!-- Bio Card -->
+                    <div class="lg:col-span-7 glass-card rounded-3xl p-8 flex flex-col justify-between">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-3 text-space-cyan font-orbitron font-semibold">
+                                <i class="fa-solid fa-[#00f0ff] fa-user-astronaut text-2xl"></i>
+                                <span class="text-lg">Ringkasan Profil</span>
+                            </div>
+                            <p class="text-gray-300 leading-relaxed text-base sm:text-lg">
+                                Saya adalah lulusan <strong class="text-white">S1 Teknologi Informasi</strong> dari <strong class="text-space-cyan">Universitas Tangerang Raya</strong> dengan raihan <strong class="text-white">IPK 3,56 / 4,00</strong>. Memiliki pengalaman praktis sebagai <strong class="text-white">Web Developer Intern</strong> di Dinas Ketenagakerjaan Kabupaten Tangerang.
+                            </p>
+                            <p class="text-gray-400 leading-relaxed text-sm sm:text-base">
+                                Saya terampil dalam mengembangkan aplikasi web interaktif, perancangan sistem, serta pengelolaan basis data. Memiliki pemahaman kuat mengenai framework pemrograman modern (Laravel, AdminLTE) dan arsitektur <strong class="text-space-purple">Cloud Computing</strong>. Siap berkontribusi dalam membangun solusi perangkat lunak yang responsif, efisien, dan terskala bagi perusahaan.
+                            </p>
+                        </div>
+
+                        <!-- Mini Stats Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-8 mt-6 border-t border-gray-800">
+                            <div class="glass-panel p-4 rounded-2xl text-center">
+                                <div class="font-orbitron font-extrabold text-2xl text-space-cyan">3.56</div>
+                                <div class="text-xs text-gray-400 mt-1">IPK Kelulusan</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-2xl text-center">
+                                <div class="font-orbitron font-extrabold text-2xl text-space-purple">3+ Bulan</div>
+                                <div class="text-xs text-gray-400 mt-1">Pengalaman Magang</div>
+                            </div>
+                            <div class="glass-panel p-4 rounded-2xl text-center col-span-2 sm:col-span-1">
+                                <div class="font-orbitron font-extrabold text-2xl text-space-pink">S1 IT</div>
+                                <div class="text-xs text-gray-400 mt-1">Gelar Akademik</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Education & Language Card -->
+                    <div class="lg:col-span-5 space-y-6 flex flex-col justify-between">
+                        <!-- Education Card -->
+                        <div class="glass-card rounded-3xl p-6 relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 text-space-cyan/10 text-9xl font-orbitron font-bold select-none pointer-events-none">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                            <div class="flex items-center gap-3 text-space-purple font-orbitron font-semibold mb-4">
+                                <i class="fa-solid fa-university text-xl"></i>
+                                <span class="text-lg">Pendidikan</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-white font-orbitron">Universitas Tangerang Raya</h3>
+                            <p class="text-space-cyan font-medium text-sm mt-1">S1 Teknologi Informasi (2022 - 2026)</p>
+                            <p class="text-gray-400 text-xs mt-3 leading-relaxed">
+                                Berfokus pada pengembangan web, manajemen basis data, dan arsitektur cloud computing. Aktif menyelesaikan proyek praktikum seperti perancangan antarmuka pengguna (UI/UX) dan pengembangan sistem informasi inventaris.
+                            </p>
+                        </div>
+
+                        <!-- Language & Location Card -->
+                        <div class="glass-card rounded-3xl p-6">
+                            <div class="flex items-center gap-3 text-space-pink font-orbitron font-semibold mb-4">
+                                <i class="fa-solid fa-earth-asia text-xl"></i>
+                                <span class="text-lg">Bahasa & Lokasi</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between p-3 rounded-xl glass-panel">
+                                    <span class="text-sm font-medium text-white"><i class="fa-solid fa-language text-space-cyan mr-2"></i> Bahasa Indonesia</span>
+                                    <span class="text-xs px-3 py-1 rounded-full bg-space-cyan/20 text-space-cyan font-orbitron">Native / Penutur Asli</span>
+                                </div>
+                                <div class="flex items-center justify-between p-3 rounded-xl glass-panel">
+                                    <span class="text-sm font-medium text-white"><i class="fa-solid fa-map-pin text-space-purple mr-2"></i> Domisili</span>
+                                    <span class="text-xs px-3 py-1 rounded-full bg-space-purple/20 text-space-purple font-orbitron">Tangerang, Indonesia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Skills Section -->
+        <section id="skills" class="py-20 px-4 sm:px-8 relative bg-space-darkBlue/40">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center space-y-2 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-orbitron font-extrabold text-white tracking-wide">
+                        <span class="text-space-cyan">&lt;</span> KEAHLIAN & TECH STACK <span class="text-space-cyan">/&gt;</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                        Teknologi, framework, dan perkakas yang saya kuasai dalam membangun sistem informasi modern.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-space-cyan to-space-purple mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <!-- Skill Categories Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Skill 1: Programming & Frameworks -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-space-cyan/10 border border-space-cyan/30 flex items-center justify-center text-space-cyan text-2xl mb-4">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Programming & Frameworks</h3>
+                            <p class="text-xs text-gray-400 mb-6">Bahasa dan framework pemrograman utama untuk web development.</p>
+                            
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-space-cyan"><i class="fa-brands fa-php mr-1"></i> PHP</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-red-400"><i class="fa-brands fa-laravel mr-1"></i> Laravel</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-orange-400"><i class="fa-brands fa-html5 mr-1"></i> HTML5</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-blue-400"><i class="fa-brands fa-css3-alt mr-1"></i> CSS3</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-yellow-400"><i class="fa-brands fa-js mr-1"></i> JavaScript</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 2: Database & Tools -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-space-purple/10 border border-space-purple/30 flex items-center justify-center text-space-purple text-2xl mb-4">
+                                <i class="fa-solid fa-database"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Database & Tools</h3>
+                            <p class="text-xs text-gray-400 mb-6">Pengelolaan data, perancangan antarmuka admin, dan version control.</p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-blue-300"><i class="fa-solid fa-server mr-1"></i> MySQL</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-space-purple"><i class="fa-solid fa-gauge-high mr-1"></i> AdminLTE</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-orange-500"><i class="fa-brands fa-git-alt mr-1"></i> Git</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-gray-200"><i class="fa-brands fa-github mr-1"></i> GitHub</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-orange-400"><i class="fa-solid fa-paper-plane mr-1"></i> Postman</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 3: Cloud & Infrastructure -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-space-pink/10 border border-space-pink/30 flex items-center justify-center text-space-pink text-2xl mb-4">
+                                <i class="fa-solid fa-cloud"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Cloud & Infrastructure</h3>
+                            <p class="text-xs text-gray-400 mb-6">Konsep komputasi awan, migrasi sistem, dan manajemen hosting.</p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-space-pink"><i class="fa-solid fa-cloud-arrow-up mr-1"></i> Cloud Concepts</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-purple-300"><i class="fa-solid fa-arrows-rotate mr-1"></i> System Migration</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-indigo-300"><i class="fa-solid fa-network-wired mr-1"></i> Web Hosting</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 4: Core Competencies -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl mb-4">
+                                <i class="fa-solid fa-compass-drafting"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Core Competencies</h3>
+                            <p class="text-xs text-gray-400 mb-6">Kompetensi inti dalam siklus pengembangan perangkat lunak.</p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-emerald-400"><i class="fa-solid fa-laptop-code mr-1"></i> Web Development</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-space-cyan"><i class="fa-solid fa-pen-nib mr-1"></i> UI/UX Design</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-yellow-300"><i class="fa-solid fa-plug mr-1"></i> RESTful API</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-blue-300"><i class="fa-solid fa-chart-diagram mr-1"></i> System Analysis</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 5: Office & Productivity -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl mb-4">
+                                <i class="fa-solid fa-briefcase"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Office & Productivity</h3>
+                            <p class="text-xs text-gray-400 mb-6">Perangkat produktivitas kantor dan kolaborasi dokumen.</p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-blue-400"><i class="fa-solid fa-file-word mr-1"></i> MS Office</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-emerald-400"><i class="fa-brands fa-google mr-1"></i> Google Workspace</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skill 6: Soft Skills -->
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 text-2xl mb-4">
+                                <i class="fa-solid fa-brain"></i>
+                            </div>
+                            <h3 class="text-lg font-bold font-orbitron text-white mb-3">Soft Skills</h3>
+                            <p class="text-xs text-gray-400 mb-6">Keterampilan interpersonal dan pemecahan masalah teknis.</p>
+
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-sky-300"><i class="fa-solid fa-lightbulb mr-1"></i> Problem Solving</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-indigo-300"><i class="fa-solid fa-file-lines mr-1"></i> Tech Documentation</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-purple-300"><i class="fa-solid fa-people-group mr-1"></i> Teamwork</span>
+                                <span class="px-3 py-1.5 rounded-xl bg-slate-800/80 border border-gray-700 text-xs font-semibold text-pink-300"><i class="fa-solid fa-puzzle-piece mr-1"></i> Critical Thinking</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Experience Section -->
+        <section id="experience" class="py-20 px-4 sm:px-8 relative">
+            <div class="max-w-5xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center space-y-2 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-orbitron font-extrabold text-white tracking-wide">
+                        <span class="text-space-cyan">&lt;</span> PENGALAMAN KERJA <span class="text-space-cyan">/&gt;</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                        Jejak karir dan kontribusi nyata saya dalam industri pembuatan perangkat lunak.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-space-cyan to-space-purple mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <!-- Timeline Container -->
+                <div class="relative pl-6 sm:pl-8 border-l-2 border-space-cyan/30 space-y-12">
+
+                    <!-- Experience Item 1 -->
+                    <div class="relative group">
+                        <!-- Timeline Node Dot -->
+                        <div class="absolute -left-[31px] sm:-left-[39px] top-1 w-6 h-6 rounded-full bg-space-darkBlue border-2 border-space-cyan group-hover:scale-125 group-hover:bg-space-cyan transition-all flex items-center justify-center">
+                            <div class="w-2 h-2 rounded-full bg-space-cyan group-hover:bg-space-darkBlue"></div>
+                        </div>
+
+                        <!-- Card Content -->
+                        <div class="glass-card rounded-3xl p-6 sm:p-8 space-y-4">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-4">
+                                <div>
+                                    <span class="text-xs font-orbitron font-semibold text-space-cyan tracking-widest uppercase">Magang Web Developer</span>
+                                    <h3 class="text-xl sm:text-2xl font-bold font-orbitron text-white mt-1">Dinas Ketenagakerjaan Kabupaten Tangerang</h3>
+                                </div>
+                                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-xs font-orbitron text-space-purple border border-space-purple/30 w-fit">
+                                    <i class="fa-solid fa-calendar-days"></i> Maret 2026 - Agustus 2026 (3 Bulan)
+                                </div>
+                            </div>
+
+                            <div class="text-xs text-gray-400 flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-space-cyan"></i> Kabupaten Tangerang, Indonesia
+                            </div>
+
+                            <!-- Highlights Bullets -->
+                            <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                                <li class="flex items-start gap-3">
+                                    <span class="text-space-cyan mt-1"><i class="fa-solid fa-circle-check"></i></span>
+                                    <span><strong>Pengembangan Sistem Digital:</strong> Merancang dan mengembangkan aplikasi web internal serta modul dokumen digital untuk mendukung efisiensi pendataan instansi.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-space-cyan mt-1"><i class="fa-solid fa-circle-check"></i></span>
+                                    <span><strong>Pengembangan UI/UX Responsif:</strong> Mengimplementasikan framework <strong>Laravel</strong> dan <strong>AdminLTE</strong> dalam pembuatan antarmuka pengguna (UI/UX) yang responsif dan mudah digunakan.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="text-space-cyan mt-1"><i class="fa-solid fa-circle-check"></i></span>
+                                    <span><strong>Manajemen Database & Testing:</strong> Mengelola struktur basis data <strong>MySQL</strong> dan melakukan pengujian sistem (testing) untuk memastikan aplikasi berjalan optimal tanpa bottleneck.</span>
+                                </li>
+                            </ul>
+
+                            <!-- Tech Badges -->
+                            <div class="pt-4 flex flex-wrap gap-2 border-t border-gray-800/60">
+                                <span class="px-3 py-1 rounded-lg bg-space-cyan/10 text-space-cyan text-xs font-mono">Laravel</span>
+                                <span class="px-3 py-1 rounded-lg bg-space-purple/10 text-space-purple text-xs font-mono">AdminLTE</span>
+                                <span class="px-3 py-1 rounded-lg bg-blue-500/10 text-blue-400 text-xs font-mono">MySQL</span>
+                                <span class="px-3 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-mono">UI/UX Design</span>
+                                <span class="px-3 py-1 rounded-lg bg-pink-500/10 text-pink-400 text-xs font-mono">System Testing</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Projects Section -->
+        <section id="projects" class="py-20 px-4 sm:px-8 relative bg-space-darkBlue/40">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center space-y-2 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-orbitron font-extrabold text-white tracking-wide">
+                        <span class="text-space-cyan">&lt;</span> PROYEK PORTFOLIO <span class="text-space-cyan">/&gt;</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                        Showcase proyek perangkat lunak dan desain UI/UX yang telah diselesaikan.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-space-cyan to-space-purple mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <!-- Project Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Project Card 1 -->
+                    <div class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                        <div>
+                            <!-- Project Visual Banner -->
+                            <div class="h-48 bg-gradient-to-tr from-slate-900 to-indigo-950 p-6 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-space-cyan/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <i class="fa-solid fa-file-contract text-6xl text-space-cyan/40 group-hover:scale-110 group-hover:text-space-cyan transition-all duration-500"></i>
+                                <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-space-cyan/20 border border-space-cyan/40 text-space-cyan text-xs font-orbitron">Disnaker App</span>
+                            </div>
+
+                            <!-- Body Content -->
+                            <div class="p-6 space-y-3">
+                                <h3 class="text-lg font-bold font-orbitron text-white group-hover:text-space-cyan transition-colors">
+                                    Modul Dokumen Digital Disnaker
+                                </h3>
+                                <p class="text-xs text-gray-400 leading-relaxed line-clamp-3">
+                                    Aplikasi web internal pendataan dan pengelolaan modul dokumen digital untuk efisiensi instansi Dinas Ketenagakerjaan Kabupaten Tangerang.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-space-cyan">Laravel</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-space-purple">AdminLTE</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-blue-400">MySQL</span>
+                            </div>
+                            <button onclick="openProjectModal('Modul Dokumen Digital Disnaker', 'Sistem pengarsipan dan pendataan dokumen digital internal instansi pemerintah yang dikembangkan menggunakan Laravel & AdminLTE dengan integrasi basis data MySQL terstruktur.', ['Laravel', 'AdminLTE', 'MySQL', 'PHP', 'JavaScript'])" class="w-full py-2.5 rounded-xl glass-panel border border-space-cyan/40 text-space-cyan hover:bg-space-cyan hover:text-space-darkBlue font-orbitron text-xs font-bold transition-all">
+                                Lihat Detail Proyek <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2 -->
+                    <div class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                        <div>
+                            <!-- Project Visual Banner -->
+                            <div class="h-48 bg-gradient-to-tr from-slate-900 to-purple-950 p-6 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-space-purple/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <i class="fa-solid fa-boxes-stacked text-6xl text-space-purple/40 group-hover:scale-110 group-hover:text-space-purple transition-all duration-500"></i>
+                                <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-space-purple/20 border border-space-purple/40 text-space-purple text-xs font-orbitron">Academic Project</span>
+                            </div>
+
+                            <!-- Body Content -->
+                            <div class="p-6 space-y-3">
+                                <h3 class="text-lg font-bold font-orbitron text-white group-hover:text-space-purple transition-colors">
+                                    Sistem Informasi Inventaris UNTARA
+                                </h3>
+                                <p class="text-xs text-gray-400 leading-relaxed line-clamp-3">
+                                    Proyek praktikum kuliah untuk manajemen pencatatan aset dan inventaris barang kampus dengan pelaporan otomatis.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-space-purple">PHP</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-blue-400">MySQL</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-orange-400">HTML5/CSS3</span>
+                            </div>
+                            <button onclick="openProjectModal('Sistem Informasi Inventaris', 'Sistem manajemen aset berbasis web untuk mencatat masuk dan keluar barang inventaris dengan analisis ketersediaan stok secara real-time.', ['PHP', 'MySQL', 'Bootstrap', 'JavaScript'])" class="w-full py-2.5 rounded-xl glass-panel border border-space-purple/40 text-space-purple hover:bg-space-purple hover:text-white font-orbitron text-xs font-bold transition-all">
+                                Lihat Detail Proyek <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 -->
+                    <div class="glass-card rounded-3xl overflow-hidden flex flex-col justify-between group">
+                        <div>
+                            <!-- Project Visual Banner -->
+                            <div class="h-48 bg-gradient-to-tr from-slate-900 to-pink-950 p-6 relative flex items-center justify-center overflow-hidden">
+                                <div class="absolute inset-0 bg-space-pink/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <i class="fa-solid fa-pen-ruler text-6xl text-space-pink/40 group-hover:scale-110 group-hover:text-space-pink transition-all duration-500"></i>
+                                <span class="absolute top-4 right-4 px-3 py-1 rounded-full bg-space-pink/20 border border-space-pink/40 text-space-pink text-xs font-orbitron">UI/UX Design</span>
+                            </div>
+
+                            <!-- Body Content -->
+                            <div class="p-6 space-y-3">
+                                <h3 class="text-lg font-bold font-orbitron text-white group-hover:text-space-pink transition-colors">
+                                    Perancangan UI/UX Application Kit
+                                </h3>
+                                <p class="text-xs text-gray-400 leading-relaxed line-clamp-3">
+                                    Desain prototipe antarmuka pengguna interaktif dengan pendekatan user-centered design untuk aplikasi berbasis web.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="p-6 pt-0 space-y-4">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-space-pink">UI/UX Design</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-space-cyan">Prototyping</span>
+                                <span class="px-2 py-1 rounded bg-slate-800 text-[10px] text-yellow-300">User Research</span>
+                            </div>
+                            <button onclick="openProjectModal('Perancangan UI/UX App Kit', 'Proyek perancangan sketsa wireframe, mockup tinggi, dan prototipe interaktif untuk pengalaman pengguna aplikasi web yang responsif dan intuitif.', ['UI/UX Design', 'Wireframing', 'Prototyping', 'User Testing'])" class="w-full py-2.5 rounded-xl glass-panel border border-space-pink/40 text-space-pink hover:bg-space-pink hover:text-white font-orbitron text-xs font-bold transition-all">
+                                Lihat Detail Proyek <i class="fa-solid fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Contact Section -->
+        <section id="contact" class="py-20 px-4 sm:px-8 relative">
+            <div class="max-w-7xl mx-auto">
+                <!-- Section Header -->
+                <div class="text-center space-y-2 mb-16">
+                    <h2 class="text-3xl sm:text-4xl font-orbitron font-extrabold text-white tracking-wide">
+                        <span class="text-space-cyan">&lt;</span> TRANSMISI KONTAK <span class="text-space-cyan">/&gt;</span>
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+                        Mari berdiskusi mengenai peluang kerja, proyek, atau kolaborasi pengembangan perangkat lunak.
+                    </p>
+                    <div class="w-24 h-1 bg-gradient-to-r from-space-cyan to-space-purple mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Contact Info Cards -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <!-- Card Email -->
+                        <a href="mailto:nirmanromansyah32@gmail.com" class="glass-card rounded-2xl p-6 flex items-center gap-4 group block">
+                            <div class="w-14 h-14 rounded-2xl bg-space-cyan/10 border border-space-cyan/30 flex items-center justify-center text-space-cyan text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-orbitron text-gray-400">Alamat Email</div>
+                                <div class="text-sm font-bold text-white group-hover:text-space-cyan transition-colors break-all">nirmanromansyah32@gmail.com</div>
+                            </div>
+                        </a>
+
+                        <!-- Card Phone -->
+                        <a href="tel:088210880092" class="glass-card rounded-2xl p-6 flex items-center gap-4 group block">
+                            <div class="w-14 h-14 rounded-2xl bg-space-purple/10 border border-space-purple/30 flex items-center justify-center text-space-purple text-2xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-orbitron text-gray-400">Telepon / WhatsApp</div>
+                                <div class="text-sm font-bold text-white group-hover:text-space-purple transition-colors">088210880092</div>
+                            </div>
+                        </a>
+
+                        <!-- Card Location -->
+                        <div class="glass-card rounded-2xl p-6 flex items-center gap-4">
+                            <div class="w-14 h-14 rounded-2xl bg-space-pink/10 border border-space-pink/30 flex items-center justify-center text-space-pink text-2xl">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-orbitron text-gray-400">Lokasi / Stasion</div>
+                                <div class="text-sm font-bold text-white">Tangerang, Banten, Indonesia</div>
+                            </div>
+                        </div>
+
+                        <!-- Social Quick Links -->
+                        <div class="glass-panel rounded-2xl p-6 text-center space-y-3">
+                            <p class="text-xs font-orbitron text-gray-400 uppercase tracking-widest">Koneksi Network</p>
+                            <div class="flex justify-center gap-4 text-xl">
+                                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-300 hover:text-space-cyan hover:border-space-cyan transition-all">
+                                    <i class="fa-brands fa-github"></i>
+                                </a>
+                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-300 hover:text-space-cyan hover:border-space-cyan transition-all">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </a>
+                                <a href="mailto:nirmanromansyah32@gmail.com" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-gray-300 hover:text-space-cyan hover:border-space-cyan transition-all">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form Card -->
+                    <div class="lg:col-span-7 glass-card rounded-3xl p-8">
+                        <form id="contact-form" class="space-y-6">
+                            <h3 class="text-xl font-bold font-orbitron text-white mb-2">Kirim Pesan Sinyal</h3>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label for="name" class="text-xs font-orbitron text-gray-300">Nama Lengkap</label>
+                                    <input type="text" id="name" required placeholder="Masukkan nama Anda" class="w-full px-4 py-3 rounded-xl glass-panel border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-space-cyan transition-colors text-sm">
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="email" class="text-xs font-orbitron text-gray-300">Alamat Email</label>
+                                    <input type="email" id="email" required placeholder="nama@email.com" class="w-full px-4 py-3 rounded-xl glass-panel border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-space-cyan transition-colors text-sm">
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="subject" class="text-xs font-orbitron text-gray-300">Subjek Pesan</label>
+                                <input type="text" id="subject" required placeholder="Topik diskusi atau tawaran proyek" class="w-full px-4 py-3 rounded-xl glass-panel border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-space-cyan transition-colors text-sm">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label for="message" class="text-xs font-orbitron text-gray-300">Isi Pesan</label>
+                                <textarea id="message" rows="4" required placeholder="Tuliskan detail pesan Anda di sini..." class="w-full px-4 py-3 rounded-xl glass-panel border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-space-cyan transition-colors text-sm resize-none"></textarea>
+                            </div>
+
+                            <!-- Form Status Message -->
+                            <div id="form-status" class="hidden p-4 rounded-xl text-xs font-orbitron text-center"></div>
+
+                            <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-space-cyan to-space-purple text-space-darkBlue font-orbitron font-bold text-sm tracking-wider uppercase hover:shadow-[0_0_20px_rgba(0,240,255,0.5)] transition-all">
+                                <i class="fa-solid fa-satellite-dish mr-2"></i> Transmisikan Pesan
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-card rounded-3xl max-w-xl w-full p-6 sm:p-8 space-y-6 relative border border-space-cyan">
+            <button onclick="closeProjectModal()" class="absolute top-6 right-6 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="space-y-2">
+                <span class="text-xs font-orbitron text-space-cyan uppercase tracking-widest">Detail Proyek</span>
+                <h3 id="modal-title" class="text-2xl font-bold font-orbitron text-white"></h3>
+            </div>
+            <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed"></p>
+            <div>
+                <h4 class="text-xs font-orbitron text-gray-400 mb-2 uppercase">Teknologi Terlibat</h4>
+                <div id="modal-tags" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div class="pt-4 border-t border-gray-800 flex justify-end">
+                <button onclick="closeProjectModal()" class="px-6 py-2.5 rounded-xl bg-space-cyan text-space-darkBlue font-orbitron font-bold text-xs uppercase">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-gray-800/80 py-8 px-4 text-center text-xs text-gray-500 font-orbitron space-y-2">
+        <p>&copy; 2026 Nirman Romansyah. All rights reserved.</p>
+        <p class="text-gray-600">Designed with Space Concept &bull; Built with HTML5, CSS3, Tailwind & Vanilla JS</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // 1. Interactive Starfield Canvas
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let stars = [];
+        const numStars = 180;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initStars();
+        }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 1.8 + 0.2,
+                    color: Math.random() > 0.3 ? '#00f0ff' : (Math.random() > 0.5 ? '#a855f7' : '#ffffff'),
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.02 + 0.005,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: (Math.random() - 0.5) * 0.2
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            stars.forEach(star => {
+                // Twinkle Effect
+                star.alpha += star.speed;
+                if (star.alpha > 1 || star.alpha < 0) {
+                    star.speed = -star.speed;
+                }
+
+                // Parallax Move with Mouse
+                const parallaxX = (mouseX - canvas.width / 2) * 0.0005;
+                const parallaxY = (mouseY - canvas.height / 2) * 0.0005;
+
+                star.x += star.vx + parallaxX;
+                star.y += star.vy + parallaxY;
+
+                // Wrap around edges
+                if (star.x < 0) star.x = canvas.width;
+                if (star.x > canvas.width) star.x = 0;
+                if (star.y < 0) star.y = canvas.height;
+                if (star.y > canvas.height) star.y = 0;
+
+                ctx.save();
+                ctx.globalAlpha = Math.abs(star.alpha);
+                ctx.fillStyle = star.color;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            requestAnimationFrame(drawStars);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Init Canvas Starfield
+        resizeCanvas();
+        drawStars();
+
+        // 2. Typing Effect Animation
+        const roles = ["Web Developer", "UI/UX Enthusiast", "IT Graduate (IPK 3.56)", "Laravel & MySQL Dev"];
+        let roleIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typedTextElement = document.getElementById('typed-text');
+
+        function typeEffect() {
+            const currentRole = roles[roleIndex];
+            
+            if (isDeleting) {
+                typedTextElement.textContent = currentRole.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typedTextElement.textContent = currentRole.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIndex === currentRole.length) {
+                typeSpeed = 2000; // Pause at full text
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            typeEffect();
+        });
+
+        // 3. Mobile Navigation Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            mobileMenu.classList.toggle('flex');
+        });
+
+        // Close Mobile Menu on Nav Click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('flex');
+            });
+        });
+
+        // Navbar Scroll Background Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('py-2');
+            }
+        });
+
+        // 4. Project Modal Logic
+        function openProjectModal(title, description, tags) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = description;
+            
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = '';
+            tags.forEach(tag => {
+                const tagSpan = document.createElement('span');
+                tagSpan.className = 'px-3 py-1 rounded-full bg-space-cyan/20 border border-space-cyan/40 text-space-cyan text-xs font-mono';
+                tagSpan.textContent = tag;
+                tagsContainer.appendChild(tagSpan);
+            });
+
+            document.getElementById('project-modal').classList.remove('hidden');
+        }
+
+        function closeProjectModal() {
+            document.getElementById('project-modal').classList.add('hidden');
+        }
+
+        // 5. Contact Form Interactive Handler
+        const contactForm = document.getElementById('contact-form');
+        const formStatus = document.getElementById('form-status');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show Transmission Loading
+            formStatus.className = "p-4 rounded-xl text-xs font-orbitron text-center bg-space-cyan/20 text-space-cyan border border-space-cyan/40 block";
+            formStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Mengirimkan Sinyal Transmisi...';
+
+            setTimeout(() => {
+                formStatus.className = "p-4 rounded-xl text-xs font-orbitron text-center bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 block";
+                formStatus.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Transmisi Terkirim! Terima kasih, Nirman akan segera merespons.';
+                contactForm.reset();
+            }, 1800);
+        });
+    </script>
+</body>
+</html>
